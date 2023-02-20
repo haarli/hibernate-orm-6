@@ -38,21 +38,13 @@ public class JPAUnitTestCase {
 	// Entities are auto-discovered, so just add them anywhere on class-path
 	// Add your tests, using standard JUnit.
 
-
-
 	@Test
 	public void queryEntityWithCircularReference() throws Exception {
 
+		createEntity();
+
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist(createEntity());
-		entityManager.getTransaction().commit();
-		entityManager.close();
-
-
-		entityManager = entityManagerFactory.createEntityManager();
 		Child result = entityManager.createQuery("SELECT child from Child child WHERE child.objectId = 'c1'", Child.class).getSingleResult();
-
 
 
 		logger.info("----- Result from query: -----");
@@ -66,14 +58,9 @@ public class JPAUnitTestCase {
 	@Test
 	public void findEntityWithCircularReference() throws Exception {
 
+		createEntity();
 
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist(createEntity());
-		entityManager.getTransaction().commit();
-		entityManager.close();
-
-		entityManager = entityManagerFactory.createEntityManager();
 		Child result = entityManager.find(Child.class, "c1");
 
 		logger.info("----- Result from find: -----");
@@ -97,6 +84,11 @@ public class JPAUnitTestCase {
 
 		p1.setFavouriteChild(c1);
 
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(c1);
+		entityManager.getTransaction().commit();
+		entityManager.close();
 		return c1;
 	}
 }
