@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.bugs.model.Child;
 import org.hibernate.bugs.model.Parent;
@@ -18,7 +20,7 @@ import org.junit.Test;
  */
 public class JPAUnitTestCase {
 
-	//private static Logger logger = LogManager.getLogger(JPAUnitTestCase.class);
+	private static Logger logger = LogManager.getLogger(JPAUnitTestCase.class);
 
 	private EntityManagerFactory entityManagerFactory;
 
@@ -52,11 +54,11 @@ public class JPAUnitTestCase {
 		Child result = entityManager.createQuery("SELECT child from Child child WHERE child.objectId = 'c1'", Child.class).getSingleResult();
 
 
-		/*
+
 		logger.info("----- Result from query: -----");
 		logger.info(result.toString());
 		logger.info(result.getParent().getFavouriteChild().toString());
-*/
+
 		Assert.assertTrue(result == result.getParent().getFavouriteChild());
 		entityManager.close();
 
@@ -73,11 +75,11 @@ public class JPAUnitTestCase {
 
 		entityManager = entityManagerFactory.createEntityManager();
 		Child result = entityManager.find(Child.class, "c1");
-/*
+
 		logger.info("----- Result from find: -----");
 		logger.info(result.toString());
 		logger.info(result.getParent().getFavouriteChild().toString());
-*/
+
 		Assert.assertTrue(result == result.getParent().getFavouriteChild());
 		entityManager.close();
 
